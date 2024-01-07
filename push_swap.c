@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/06 21:32:30 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/07 11:56:48 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,83 +30,117 @@ int	is_int(const char *str)
 	return (1);
 }
 
-void    free_stack(int **stack)
+int	within_range(const char *str)
 {
-    free(*stack);
-    *stack = NULL;
+	const char	*int_max = "2147483647";
+	const char	*int_min = "-2147483648";
+	
+	if (*str == '-')
+	{
+		if ((ft_strlen(str) >= ft_strlen(int_min)) && ft_strcmp(str, int_min) > 0)
+			return (0);
+	}
+	else
+	{
+		if (ft_strlen(str) >= ft_strlen(int_max) && ft_strcmp(str, int_max) > 0)
+			return (0);
+	}
+	return (1);
 }
 
-void    fill_single_argument(char **av, int **stack)
+void	free_stack(int **stack)
 {
-    int     i;
-    char    **tokens;
-
-    i = 0;
-    tokens = ft_split(av[1], ' ');
-    if (tokens)
-    {
-        while (tokens[i])
-            if (is_int(tokens[i]))
-                i ++;
-            else
-                return ;
-    }
-    if (i < 2)
-        return ;
-    *stack = malloc(sizeof(int) * i);
-    i = 0;
-    while (tokens[i])
-    {
-        (*stack)[i] = ft_atoi(ft_strdup(tokens[i]));
-        i ++;
-    }
+	free(*stack);
+	*stack = NULL;
 }
 
-void    fill_multiple_arguments(char **av, int ac, int **stack)
+int	fill_single_argument(char **av, int **stack)
 {
-    int     i;
+	int		i;
+	char	**tokens;
 
-    i = 0;
-    *stack = malloc(sizeof(int) * (ac - 1));
-    while (i < ac)
-    {
-        if (is_int(av[i]))
-            (*stack)[i] = ft_atoi(av[i]);
-        else
-        {
-            free_stack(stack);
-            return ;
-        }
-        i ++;
-    }
+	i = 0;
+	tokens = ft_split(av[1], ' ');
+	if (tokens)
+	{
+		while (tokens[i])
+		{
+			if (is_int(tokens[i]) && within_range(tokens[i]))
+				i++;
+			else
+				return (0);
+		}
+	}
+	if (i < 2)
+		return (0);
+	*stack = malloc(sizeof(int) * i);
+	if (*stack == NULL)
+		return (0);
+	i = 0;
+	while (tokens[i])
+	{
+		(*stack)[i] = ft_atoi(tokens[i]);
+		i++;
+	}
+	return (i);
 }
 
-int main(int ac, char **av)
+void	fill_multiple_arguments(char **av, int ac, int **stack)
 {
-    int i;
-    int *stack;
+	int	i;
+	int	j;
 
-    stack = NULL;
-    i = 0;
-    if (ac < 2)
-    {
-        ft_printf("Error\n");
-        return (0);
-    }
-    if (ac == 2)
-        fill_single_argument(av, &stack);
-    else
-        fill_multiple_arguments(av, ac, &stack);
-    if (!stack)
-        ft_printf("Error\n");
-    while (stack[i])
-    {
-        ft_printf("%d\n", stack[i]);
-        i ++;
-    }
-    i = 0;
-    free_stack(&stack);
-    return (0);
+	j = 1;
+	i = 0;
+	*stack = malloc(sizeof(int) * (ac - 1));
+	if (*stack == NULL)
+		return ;
+	while (j < ac)
+	{
+		if (is_int(av[j]) && within_range(av[j]))
+		{
+			(*stack)[i] = ft_atoi(av[j]);
+			i++;
+		}
+		else
+		{
+			free_stack(stack);
+			return ;
+		}
+		j++;
+	}
+}
+
+int	main(int ac, char **av)
+{
+	int	i;
+	int	length;
+	int	*stack;
+
+	length = ac - 1;
+	stack = NULL;
+	i = 0;
+	if (ac < 2)
+	{
+		ft_printf("Error\n");
+		return (0);
+	}
+	if (ac == 2)
+		length = fill_single_argument(av, &stack);
+	else
+		fill_multiple_arguments(av, ac, &stack);
+	if (stack == NULL)
+	{
+		ft_printf("Error\n");
+		return (0);
+	}
+	while (i < length)
+	{
+		ft_printf("%d\n", stack[i]);
+		i++;
+	}
+	free_stack(&stack);
+	return (0);
 }
 
 //int	*fill_arguments(char **av)
@@ -161,7 +195,7 @@ int main(int ac, char **av)
 //int	main(int ac, char **av)
 //{
 //	int		i;
-//	int	    *stack;
+//	int			*stack;
 //
 //	stack = NULL;
 //	if (ac < 2)

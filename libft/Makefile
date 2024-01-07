@@ -1,6 +1,6 @@
 NAME		= libft.a
 CFLAGS		= -Wall -Werror -Wextra -I. -c
-FILES		= ft_atoi.c ft_split.c ft_isdigit.c ft_strlen.c ft_strlcpy.c ft_substr.c ft_strdup.c ft_isint.c ft_bzero.c
+FILES		= ft_atoi.c ft_split.c ft_isdigit.c ft_strlen.c ft_strlcpy.c ft_substr.c ft_strdup.c  ft_strcmp.c ft_isint.c ft_bzero.c
 OBJ			= $(FILES:.c=.o)
 CC 			= gcc
 

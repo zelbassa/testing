@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   push_swap.h                                        :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/28 17:43:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/07 12:59:56 by zelbassa         ###   ########.fr       */
+/*   Created: 2024/01/07 11:49:25 by zelbassa          #+#    #+#             */
+/*   Updated: 2024/01/07 11:51:56 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PUSH_SWAP_H
-# define PUSH_SWAP_H
-# include <stdlib.h>
-# include <limits.h>
-# include "libft/libft.h"
-# include "ft_printf/ft_printf.h"
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	int	i;
 
-
-#endif
+	i = 0;
+	while (s1[i] && s1[i] == s2[i])
+		i++;
+	return (s1[i] - s2[i]);
+}
