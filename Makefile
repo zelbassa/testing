@@ -2,7 +2,7 @@ NAME	= push_swap
 LIBFT	= libft/libft.a
 PRINTF	= ft_printf/libftprintf.a
 CFLAGS	= -Wall -Wextra -Werror -I.
-FILES	= push_swap.c
+FILES	= push_swap.c mid_point.c
 OBJ		= $(FILES:.c=.o)
 CC		= gcc
 
