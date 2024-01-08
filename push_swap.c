@@ -30,10 +30,9 @@ int	is_int(const char *str)
 	return (1);
 }
 
-void	ft_push_b(int **stack_a, int **stack_b, int len_a, int length)
+void	ft_push_b(int **stack_a, int **stack_b, int *len_a, int *len_b, int length)
 {
 	int	i;
-	int	len_b;
 	int	a_element;
 
 	i = 0;
@@ -45,21 +44,21 @@ void	ft_push_b(int **stack_a, int **stack_b, int len_a, int length)
 		(*stack_a)[i] = (*stack_a)[i + 1];
 		i++;
 	}
-	len_b = length - len_a;
-	i = 0;
-	while (len_b > 0)
+	i = length - len_a;
+	while (i > 0)
 	{
-		(*stack_b)[len_b] = (*stack_b)[len_b - 1];
-		len_b--;
+		(*stack_b)[i] = (*stack_b)[i - 1];
+		i--;
 	}
+  *len_b++;
+  *len_a--;
 	(*stack_b)[0] = a_element;
 	printf("pb\n");
 }
 
-void	ft_push_a(int **stack_a, int **stack_b, int len_b, int length)
+void	ft_push_a(int **stack_a, int **stack_b,int *len_a, int *len_b, int length)
 {
 	int	i;
-	int	len_a;
 	int	b_element;
 
 	i = 0;
@@ -71,13 +70,14 @@ void	ft_push_a(int **stack_a, int **stack_b, int len_b, int length)
 		(*stack_b)[i] = (*stack_b)[i + 1];
 		i++;
 	}
-	len_a = length - len_b;
-	i = 0;
-	while (len_a > 0)
+	i = length - len_b;
+	while (i > 0)
 	{
-		(*stack_a)[len_a] = (*stack_a)[len_a - 1];
-		len_a--;
-	}
+		(*stack_a)[i] = (*stack_a)[i - 1];
+    i--;
+  }
+  *len_a++;
+  *len_b--;
 	(*stack_a)[0] = b_element;
 	printf("pa\n");
 }
@@ -235,7 +235,11 @@ void	ft_push_swap(int *stack, int length)
 {
 	int	*stack_a;
 	int	*stack_b;
+  int len_a;
+  int len_b;
 
+  len_b = 0;
+  len_a = length;
 	stack_a = malloc(sizeof(int) * length);
 	stack_b = malloc(sizeof(int) * length);
 	int i = 0;
@@ -250,11 +254,17 @@ void	ft_push_swap(int *stack, int length)
 		stack_b[i] = 0;
 		i ++;
 	}
-	for (int i = 0; i < length; i++)
+  //    33 void  ft_push_b(int **stack_a, int **stack_b, int len_a, int length)
+  ft_push_b(&stack_a, &stack_b, &len_a, &len_b, length);
+  (void)len_a;
+  (void)len_b;
+  for (int i = 0; i < length; i++)
 		printf("Stack_a[%d]: %d\n", i, stack_a[i]);
 	ft_printf("-------------\n");
 	for (int i = 0; i < length; i++)
 		printf("Stack_b[%d]: %d\n", i, stack_b[i]);
+  free(stack_a);
+  free(stack_b);
 }
 
 int	main(int ac, char **av)
@@ -268,7 +278,7 @@ int	main(int ac, char **av)
 	stack = NULL;
 	i = 0;
 	if (ac < 2)
-	{
+  {
 		ft_printf("Error\n");
 		return (0);
 	}
@@ -282,7 +292,8 @@ int	main(int ac, char **av)
 		return (0);
 	}
 	mid_point = mid_number(&stack, length);
-	ft_push_swap(stack, length);
+	ft_printf("\nmid: %d\nRandom data: %d\n", mid_point, i);
+  ft_push_swap(stack, length);
 	free_stack(&stack);
 	return (0);
 }
