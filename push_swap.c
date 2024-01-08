@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/07 21:59:39 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/08 11:41:18 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,89 @@ int	is_int(const char *str)
 	return (1);
 }
 
+void	ft_push_b(int **stack_a, int **stack_b, int len_a, int length)
+{
+	int	i;
+	int	len_b;
+	int	a_element;
+
+	i = 0;
+	if (!(*stack_a))
+		return ;
+	a_element = (*stack_a)[0];
+	while (i < len_a)
+	{
+		(*stack_a)[i] = (*stack_a)[i + 1];
+		i++;
+	}
+	len_b = length - len_a;
+	i = 0;
+	while (len_b > 0)
+	{
+		(*stack_b)[len_b] = (*stack_b)[len_b - 1];
+		len_b--;
+	}
+	(*stack_b)[0] = a_element;
+	printf("pb\n");
+}
+
+void	ft_push_a(int **stack_a, int **stack_b, int len_b, int length)
+{
+	int	i;
+	int	len_a;
+	int	b_element;
+
+	i = 0;
+	if (!(*stack_b))
+		return ;
+	b_element = (*stack_b)[0];
+	while (i < len_b)
+	{
+		(*stack_b)[i] = (*stack_b)[i + 1];
+		i++;
+	}
+	len_a = length - len_b;
+	i = 0;
+	while (len_a > 0)
+	{
+		(*stack_a)[len_a] = (*stack_a)[len_a - 1];
+		len_a--;
+	}
+	(*stack_a)[0] = b_element;
+	printf("pa\n");
+}
+
+void	ft_reverse_rotate(int **stack, char id, int length)
+{
+	int	i;
+	int	j;
+
+	i = (*stack)[length - 1];
+	j = length - 1;
+	while (j > 0)
+	{
+		(*stack)[j] = (*stack)[j - 1];
+		j--;
+	}
+	(*stack)[0] = i;
+	if (id == 'a')
+		ft_printf("rra\n");
+	else if (id == 'b')
+		ft_printf("rrb\n");
+}
 void	ft_rotate(int **stack, char id, int length)
 {
 	int	i;
 	int	j;
 
 	j = 0;
-	i = (*stack)[length - 1];
+	i = (*stack)[0];
 	while (j < length - 1)
 	{
-		(*stack)[j + 1] = (*stack)[j];
-		j ++;
+		(*stack)[j] = (*stack)[j + 1];
+		j++;
 	}
-	(*stack)[j + 1] = i;
+	(*stack)[length - 1] = i;
 	if (id == 'a')
 		ft_printf("ra\n");
 	else if (id == 'b')
@@ -64,12 +134,15 @@ void	ft_swap(int **stack, char id)
 
 int	within_range(const char *str)
 {
-	const char	*int_max = "2147483647";
-	const char	*int_min = "-2147483648";
-	
+	const char	*int_max;
+	const char	*int_min;
+
+	int_max = "2147483647";
+	int_min = "-2147483648";
 	if (*str == '-')
 	{
-		if ((ft_strlen(str) >= ft_strlen(int_min)) && ft_strcmp(str, int_min) > 0)
+		if ((ft_strlen(str) >= ft_strlen(int_min)) && ft_strcmp(str,
+				int_min) > 0)
 			return (0);
 	}
 	else
@@ -143,15 +216,45 @@ void	fill_multiple_arguments(char **av, int ac, int **stack)
 	}
 }
 
-int findClosest(int arr[], int n, int target) {
-    int closestNum = arr[0];
+int	findClosest(int arr[], int n, int target)
+{
+	int	closestNum;
 
-    for (int i = 0; i < n; i++) {
-        if (abs(target - closestNum) > abs(target - arr[i])) {
-            closestNum = arr[i];
-        }
-    }
-    return closestNum;
+	closestNum = arr[0];
+	for (int i = 0; i < n; i++)
+	{
+		if (abs(target - closestNum) > abs(target - arr[i]))
+		{
+			closestNum = arr[i];
+		}
+	}
+	return (closestNum);
+}
+
+void	ft_push_swap(int *stack, int length)
+{
+	int	*stack_a;
+	int	*stack_b;
+
+	stack_a = malloc(sizeof(int) * length);
+	stack_b = malloc(sizeof(int) * length);
+	int i = 0;
+	while (i < length)
+	{
+		stack_a[i] = stack[i];
+		i ++;
+	}
+	i = 0;
+	while (i < length)
+	{
+		stack_b[i] = 0;
+		i ++;
+	}
+	for (int i = 0; i < length; i++)
+		printf("Stack_a[%d]: %d\n", i, stack_a[i]);
+	ft_printf("-------------\n");
+	for (int i = 0; i < length; i++)
+		printf("Stack_b[%d]: %d\n", i, stack_b[i]);
 }
 
 int	main(int ac, char **av)
@@ -159,6 +262,7 @@ int	main(int ac, char **av)
 	int	i;
 	int	length;
 	int	*stack;
+	int	mid_point;
 
 	length = ac - 1;
 	stack = NULL;
@@ -177,15 +281,8 @@ int	main(int ac, char **av)
 		ft_printf("Error\n");
 		return (0);
 	}
-	int mid_point = mid_number(&stack, length);
-	printf("MID_POINT: %d", mid_point);
-	ft_swap(&stack, 'a');
-	ft_rotate(&stack, 'a', length);
-	while (i < length)
-	{
-		ft_printf("%d\n", stack[i]);
-		i++;
-	}
+	mid_point = mid_number(&stack, length);
+	ft_push_swap(stack, length);
 	free_stack(&stack);
 	return (0);
 }
