@@ -334,14 +334,14 @@ int	has_duplicates(int **stack, int len)
 
 int	main(int ac, char **av)
 {
-	int	i;
+	//int	i;
 	int	length;
 	int	*stack;
-	int	mid_point;
+	//int	mid_point;
 
 	length = ac - 1;
 	stack = NULL;
-	i = 0;
+	//i = 0;
 	if (ac < 2)
 	{
 		ft_printf("Error\n");
@@ -354,9 +354,10 @@ int	main(int ac, char **av)
 	if (stack == NULL || has_duplicates(&stack, length))
 	{
 		ft_printf("Error\n");
+		free_stack(&stack);
 		return (0);
 	}
-	mid_point = mid_number(&stack, length);
+	//mid_point = mid_number(&stack, length);
 	// ft_push_swap(stack, length);
 	free_stack(&stack);
 	return (0);
