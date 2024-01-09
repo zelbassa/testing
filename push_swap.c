@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/08 11:41:18 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/09 10:29:57 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ void	ft_reverse_rotate(int **stack, char id, int length)
 	else if (id == 'b')
 		ft_printf("rrb\n");
 }
+
 void	ft_rotate(int **stack, char id, int length)
 {
 	int	i;
@@ -231,11 +232,47 @@ int	findClosest(int arr[], int n, int target)
 	return (closestNum);
 }
 
+int	is_sorted(int **stack, int len)
+{
+	int	i;
+
+	i = 0;
+	while (i < len - 1)
+	{
+		if ((*stack)[i] < (*stack)[i + 1])
+			i++;
+		else
+			return (0);
+	}
+	return (1);
+}
+
+void	ft_sort_three(int **stack_a)
+{
+	if (((*stack_a)[0] > (*stack_a)[1]) && ((*stack_a)[0] > (*stack_a)[2]))
+		ft_rotate(stack_a, 'a', 3);
+	else if (((*stack_a)[1] > (*stack_a)[0]) && ((*stack_a)[1] > (*stack_a)[2]))
+		ft_reverse_rotate(stack_a, 'a', 3);
+	if ((*stack_a)[0] > (*stack_a)[1])
+		ft_swap(stack_a, 'a');
+	if (is_sorted(stack_a, 3))
+		return ;
+	else
+	{
+		ft_printf("Not yet sorted\n");
+		ft_sort_three(stack_a);
+	}
+}
+
 void	ft_push_swap(int *stack, int length)
 {
 	int	*stack_a;
 	int	*stack_b;
+/* 	int	len_a;
+	int	len_b;
 
+	len_a = length;
+	len_b = 0; */
 	stack_a = malloc(sizeof(int) * length);
 	stack_b = malloc(sizeof(int) * length);
 	int i = 0;
@@ -250,11 +287,49 @@ void	ft_push_swap(int *stack, int length)
 		stack_b[i] = 0;
 		i ++;
 	}
+	ft_sort_three(&stack_a);
+/* 	ft_push_a(stack_a, stack_b, &len_a, &len_b, length); */
+/* 	ft_push_b(stack_a, stack_b, &len_a, &len_b, length); */
+	if (is_sorted(&stack_a, length))
+	{
+		printf("Stack is sorted!!");
+		free(stack_a);
+		free(stack_b);
+		exit(1);
+	}
+/* 	ft_swap(&stack_a, 'a');
+	ft_rotate(&stack_a, 'a', 3); */
 	for (int i = 0; i < length; i++)
 		printf("Stack_a[%d]: %d\n", i, stack_a[i]);
 	ft_printf("-------------\n");
 	for (int i = 0; i < length; i++)
 		printf("Stack_b[%d]: %d\n", i, stack_b[i]);
+}
+
+int	has_duplicates(int **stack, int len)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	if (stack == NULL)
+		return (1);
+	while (i < len - 1)
+	{
+		j = i + 1;
+		while (j < len)
+		{
+			if ((*stack)[i] != (*stack)[j])
+				j ++;
+			else
+			{
+				printf("STACK HAS DUPLICATE VALUES!!");
+				return (1);
+			}
+		}
+		i ++;
+	}
+	return (0);
 }
 
 int	main(int ac, char **av)
@@ -276,13 +351,13 @@ int	main(int ac, char **av)
 		length = fill_single_argument(av, &stack);
 	else
 		fill_multiple_arguments(av, ac, &stack);
-	if (stack == NULL)
+	if (stack == NULL || has_duplicates(&stack, length))
 	{
 		ft_printf("Error\n");
 		return (0);
 	}
 	mid_point = mid_number(&stack, length);
-	ft_push_swap(stack, length);
+	// ft_push_swap(stack, length);
 	free_stack(&stack);
 	return (0);
 }
