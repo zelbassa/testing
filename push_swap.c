@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/09 10:29:57 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/09 23:03:22 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,56 +30,58 @@ int	is_int(const char *str)
 	return (1);
 }
 
-void	ft_push_b(int **stack_a, int **stack_b, int len_a, int length)
+void	ft_push_b(int **src, int **dest, int len_src, int length)
 {
 	int	i;
-	int	len_b;
-	int	a_element;
+	int	len_dest;
+	int	placeholder;
 
 	i = 0;
-	if (!(*stack_a))
+	if (!(*src))
 		return ;
-	a_element = (*stack_a)[0];
-	while (i < len_a)
+	placeholder = (*src)[0];
+	while (i < len_src - 1)
 	{
-		(*stack_a)[i] = (*stack_a)[i + 1];
+		(*src)[i] = (*src)[i + 1];
 		i++;
 	}
-	len_b = length - len_a;
+	len_dest = length - len_src;
 	i = 0;
-	while (len_b > 0)
+	while (len_dest > 0)
 	{
-		(*stack_b)[len_b] = (*stack_b)[len_b - 1];
-		len_b--;
+		(*dest)[len_dest] = (*dest)[len_dest - 1];
+		len_dest--;
 	}
-	(*stack_b)[0] = a_element;
-	printf("pb\n");
+	(*src)[len_src - 1] = 0;
+	(*dest)[0] = placeholder;
+	ft_printf("pb\n");
 }
 
-void	ft_push_a(int **stack_a, int **stack_b, int len_b, int length)
+void	ft_push_a(int **dest, int **src, int len_src, int length)
 {
 	int	i;
-	int	len_a;
-	int	b_element;
+	int	len_dest;
+	int	placeholder;
 
 	i = 0;
-	if (!(*stack_b))
+	if (!(*src))
 		return ;
-	b_element = (*stack_b)[0];
-	while (i < len_b)
+	placeholder = (*src)[0];
+	while (i < len_src - 1)
 	{
-		(*stack_b)[i] = (*stack_b)[i + 1];
+		(*src)[i] = (*src)[i + 1];
 		i++;
 	}
-	len_a = length - len_b;
+	len_dest = length - len_src;
 	i = 0;
-	while (len_a > 0)
+	while (len_dest > 0)
 	{
-		(*stack_a)[len_a] = (*stack_a)[len_a - 1];
-		len_a--;
+		(*dest)[len_dest] = (*dest)[len_dest - 1];
+		len_dest--;
 	}
-	(*stack_a)[0] = b_element;
-	printf("pa\n");
+	(*src)[len_src - 1] = 0;
+	(*dest)[0] = placeholder;
+	ft_printf("pa\n");
 }
 
 void	ft_reverse_rotate(int **stack, char id, int length)
@@ -217,21 +219,6 @@ void	fill_multiple_arguments(char **av, int ac, int **stack)
 	}
 }
 
-int	findClosest(int arr[], int n, int target)
-{
-	int	closestNum;
-
-	closestNum = arr[0];
-	for (int i = 0; i < n; i++)
-	{
-		if (abs(target - closestNum) > abs(target - arr[i]))
-		{
-			closestNum = arr[i];
-		}
-	}
-	return (closestNum);
-}
-
 int	is_sorted(int **stack, int len)
 {
 	int	i;
@@ -247,35 +234,88 @@ int	is_sorted(int **stack, int len)
 	return (1);
 }
 
-void	ft_sort_three(int **stack_a)
+void	ft_sort_three(int **stack, char id)
 {
-	if (((*stack_a)[0] > (*stack_a)[1]) && ((*stack_a)[0] > (*stack_a)[2]))
-		ft_rotate(stack_a, 'a', 3);
-	else if (((*stack_a)[1] > (*stack_a)[0]) && ((*stack_a)[1] > (*stack_a)[2]))
-		ft_reverse_rotate(stack_a, 'a', 3);
-	if ((*stack_a)[0] > (*stack_a)[1])
-		ft_swap(stack_a, 'a');
-	if (is_sorted(stack_a, 3))
+	if (((*stack)[0] > (*stack)[1]) && ((*stack)[0] > (*stack)[2]))
+		ft_rotate(stack, id, 3);
+	else if (((*stack)[1] > (*stack)[0]) && ((*stack)[1] > (*stack)[2]))
+		ft_reverse_rotate(stack, id, 3);
+	if ((*stack)[0] > (*stack)[1])
+		ft_swap(stack, id);
+	if (is_sorted(stack, 3))
 		return ;
 	else
+		ft_sort_three(stack, id);
+	if (id == 'a')
+		ft_printf("sa\n");
+	else if (id == 'b')
+		ft_printf("sb\n");
+}
+
+void	ft_sort_two(int **stack, char id)
+{
+	if ((*stack)[0] > (*stack)[1])
+		ft_swap(stack, id);
+}
+
+void	show_stack(int **stack_a, int **stack_b, int length)
+{
+	for (int i = 0; i < length; i++)
+		ft_printf("Stack_a[%d]: %d\n", i, stack_a[i]);
+	ft_printf("-------------\n");
+	for (int i = 0; i < length; i++)
+		ft_printf("Stack_b[%d]: %d\n", i, stack_b[i]);
+}
+
+void	ft_sort(int **stack_a, int **stack_b, int length)
+{
+	int	mid_point;
+	int	len_a;
+	int	len_b;
+	int	i;
+
+	len_a = length;
+	len_b = 0;
+	if (is_sorted(stack_a, len_a) && len_a == length)
+		exit(1);
+	mid_point = mid_number(stack_a, length);
+	i = 0;
+	if (len_a > 3)
 	{
-		ft_printf("Not yet sorted\n");
-		ft_sort_three(stack_a);
+		while (i < len_a)
+		{
+			if ((*stack_a)[i] > mid_point)
+			{
+				show_stack(stack_a, stack_b, length);
+				ft_push_b(stack_a, stack_b, len_a, length);
+				len_a --;
+				len_b ++;
+				show_stack(stack_a, stack_b, length);
+			}
+			else
+				i ++;
+		}
 	}
+	else if (len_a == 3)
+		ft_sort_three(stack_a, 'a');
+	else
+		ft_sort_two(stack_a, 'a');
+	if (is_sorted(stack_a, len_a) && len_a == length)
+		exit(1);
+	else
+		ft_sort(stack_a, stack_b, length);
+	show_stack(stack_a, stack_b, length);
 }
 
 void	ft_push_swap(int *stack, int length)
 {
 	int	*stack_a;
 	int	*stack_b;
-/* 	int	len_a;
-	int	len_b;
+	int	i;
 
-	len_a = length;
-	len_b = 0; */
 	stack_a = malloc(sizeof(int) * length);
 	stack_b = malloc(sizeof(int) * length);
-	int i = 0;
+	i = 0;
 	while (i < length)
 	{
 		stack_a[i] = stack[i];
@@ -287,23 +327,20 @@ void	ft_push_swap(int *stack, int length)
 		stack_b[i] = 0;
 		i ++;
 	}
-	ft_sort_three(&stack_a);
-/* 	ft_push_a(stack_a, stack_b, &len_a, &len_b, length); */
-/* 	ft_push_b(stack_a, stack_b, &len_a, &len_b, length); */
 	if (is_sorted(&stack_a, length))
 	{
-		printf("Stack is sorted!!");
+		ft_printf("Stack is sorted!!");
 		free(stack_a);
 		free(stack_b);
 		exit(1);
 	}
-/* 	ft_swap(&stack_a, 'a');
-	ft_rotate(&stack_a, 'a', 3); */
-	for (int i = 0; i < length; i++)
-		printf("Stack_a[%d]: %d\n", i, stack_a[i]);
-	ft_printf("-------------\n");
-	for (int i = 0; i < length; i++)
-		printf("Stack_b[%d]: %d\n", i, stack_b[i]);
+	if (length == 3)
+		ft_sort_three(&stack_a, 'a');
+	else if (length == 2)
+		ft_sort_two(&stack_a, 'a');
+	else
+		ft_sort(&stack_a, &stack_b, length);
+	show_stack(&stack_a, &stack_b, length);
 }
 
 int	has_duplicates(int **stack, int len)
@@ -322,10 +359,7 @@ int	has_duplicates(int **stack, int len)
 			if ((*stack)[i] != (*stack)[j])
 				j ++;
 			else
-			{
-				printf("STACK HAS DUPLICATE VALUES!!");
 				return (1);
-			}
 		}
 		i ++;
 	}
@@ -337,7 +371,6 @@ int	main(int ac, char **av)
 	//int	i;
 	int	length;
 	int	*stack;
-	//int	mid_point;
 
 	length = ac - 1;
 	stack = NULL;
@@ -357,8 +390,7 @@ int	main(int ac, char **av)
 		free_stack(&stack);
 		return (0);
 	}
-	//mid_point = mid_number(&stack, length);
-	// ft_push_swap(stack, length);
+	ft_push_swap(stack, length);
 	free_stack(&stack);
 	return (0);
 }
