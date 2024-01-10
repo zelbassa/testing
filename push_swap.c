@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/10 17:58:46 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/10 23:11:30 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,17 @@ void	show_stack(int **stack_a, int **stack_b, int length)
 	for (int i = 0; i < length; i++)
 		ft_printf("Stack_b[%d]: %d\n", i, (*stack_b)[i]);
 }
+
+/* void	merge_sort(int **stack_a, int **stack_b, int length)
+{
+	int	i;
+	
+	i = 0;
+	while (i < length)
+	{
+		
+	}
+} */
 
 /* void	ft_sort(int **stack_a, int **stack_b, int length)
 {

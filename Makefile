@@ -23,10 +23,12 @@ $(NAME): $(OBJ) $(LIBFT) $(PRINTF)
 clean:
 	rm -f $(OBJ)
 	cd libft && make clean
+	cd ft_printf && make clean
 
 fclean: clean
 	rm -f $(NAME)
 	cd libft && make fclean
+	cd ft_printf && make fclean
 
 re: fclean all
 
