@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/09 23:03:22 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/10 17:58:46 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,18 +238,10 @@ void	ft_sort_three(int **stack, char id)
 {
 	if (((*stack)[0] > (*stack)[1]) && ((*stack)[0] > (*stack)[2]))
 		ft_rotate(stack, id, 3);
-	else if (((*stack)[1] > (*stack)[0]) && ((*stack)[1] > (*stack)[2]))
+	if (((*stack)[1] > (*stack)[0]) && ((*stack)[1] > (*stack)[2]))
 		ft_reverse_rotate(stack, id, 3);
 	if ((*stack)[0] > (*stack)[1])
 		ft_swap(stack, id);
-	if (is_sorted(stack, 3))
-		return ;
-	else
-		ft_sort_three(stack, id);
-	if (id == 'a')
-		ft_printf("sa\n");
-	else if (id == 'b')
-		ft_printf("sb\n");
 }
 
 void	ft_sort_two(int **stack, char id)
@@ -261,13 +253,13 @@ void	ft_sort_two(int **stack, char id)
 void	show_stack(int **stack_a, int **stack_b, int length)
 {
 	for (int i = 0; i < length; i++)
-		ft_printf("Stack_a[%d]: %d\n", i, stack_a[i]);
+		ft_printf("Stack_a[%d]: %d\n", i, (*stack_a)[i]);
 	ft_printf("-------------\n");
 	for (int i = 0; i < length; i++)
-		ft_printf("Stack_b[%d]: %d\n", i, stack_b[i]);
+		ft_printf("Stack_b[%d]: %d\n", i, (*stack_b)[i]);
 }
 
-void	ft_sort(int **stack_a, int **stack_b, int length)
+/* void	ft_sort(int **stack_a, int **stack_b, int length)
 {
 	int	mid_point;
 	int	len_a;
@@ -280,32 +272,7 @@ void	ft_sort(int **stack_a, int **stack_b, int length)
 		exit(1);
 	mid_point = mid_number(stack_a, length);
 	i = 0;
-	if (len_a > 3)
-	{
-		while (i < len_a)
-		{
-			if ((*stack_a)[i] > mid_point)
-			{
-				show_stack(stack_a, stack_b, length);
-				ft_push_b(stack_a, stack_b, len_a, length);
-				len_a --;
-				len_b ++;
-				show_stack(stack_a, stack_b, length);
-			}
-			else
-				i ++;
-		}
-	}
-	else if (len_a == 3)
-		ft_sort_three(stack_a, 'a');
-	else
-		ft_sort_two(stack_a, 'a');
-	if (is_sorted(stack_a, len_a) && len_a == length)
-		exit(1);
-	else
-		ft_sort(stack_a, stack_b, length);
-	show_stack(stack_a, stack_b, length);
-}
+} */
 
 void	ft_push_swap(int *stack, int length)
 {
@@ -329,7 +296,8 @@ void	ft_push_swap(int *stack, int length)
 	}
 	if (is_sorted(&stack_a, length))
 	{
-		ft_printf("Stack is sorted!!");
+		ft_printf("Stack is sorted!!\n");
+		show_stack(&stack_a, &stack_b, length);
 		free(stack_a);
 		free(stack_b);
 		exit(1);
@@ -338,8 +306,6 @@ void	ft_push_swap(int *stack, int length)
 		ft_sort_three(&stack_a, 'a');
 	else if (length == 2)
 		ft_sort_two(&stack_a, 'a');
-	else
-		ft_sort(&stack_a, &stack_b, length);
 	show_stack(&stack_a, &stack_b, length);
 }
 
