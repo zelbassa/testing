@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/09 23:03:22 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/10 17:26:13 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,7 @@ int	fill_single_argument(char **av, int **stack)
 
 	i = 0;
 	tokens = ft_split(av[1], ' ');
+	printf("ADDRESS OF TOKENS: %p", (void *)tokens);
 	if (tokens)
 	{
 		while (tokens[i])
@@ -242,10 +243,6 @@ void	ft_sort_three(int **stack, char id)
 		ft_reverse_rotate(stack, id, 3);
 	if ((*stack)[0] > (*stack)[1])
 		ft_swap(stack, id);
-	if (is_sorted(stack, 3))
-		return ;
-	else
-		ft_sort_three(stack, id);
 	if (id == 'a')
 		ft_printf("sa\n");
 	else if (id == 'b')
@@ -261,13 +258,13 @@ void	ft_sort_two(int **stack, char id)
 void	show_stack(int **stack_a, int **stack_b, int length)
 {
 	for (int i = 0; i < length; i++)
-		ft_printf("Stack_a[%d]: %d\n", i, stack_a[i]);
+		ft_printf("Stack_a[%d]: %d\n", i, (*stack_a)[i]);
 	ft_printf("-------------\n");
 	for (int i = 0; i < length; i++)
-		ft_printf("Stack_b[%d]: %d\n", i, stack_b[i]);
+		ft_printf("Stack_b[%d]: %d\n", i, (*stack_b)[i]);
 }
 
-void	ft_sort(int **stack_a, int **stack_b, int length)
+/* void	ft_sort(int **stack_a, int **stack_b, int length)
 {
 	int	mid_point;
 	int	len_a;
@@ -304,8 +301,7 @@ void	ft_sort(int **stack_a, int **stack_b, int length)
 		exit(1);
 	else
 		ft_sort(stack_a, stack_b, length);
-	show_stack(stack_a, stack_b, length);
-}
+} */
 
 void	ft_push_swap(int *stack, int length)
 {
@@ -315,6 +311,8 @@ void	ft_push_swap(int *stack, int length)
 
 	stack_a = malloc(sizeof(int) * length);
 	stack_b = malloc(sizeof(int) * length);
+	if (stack_a == NULL || stack_b == NULL)
+		return;
 	i = 0;
 	while (i < length)
 	{
@@ -339,8 +337,12 @@ void	ft_push_swap(int *stack, int length)
 	else if (length == 2)
 		ft_sort_two(&stack_a, 'a');
 	else
-		ft_sort(&stack_a, &stack_b, length);
-	show_stack(&stack_a, &stack_b, length);
+	{
+		show_stack(&stack_a, &stack_b, length);
+		// ft_sort(&stack_a, &stack_b, length);
+	}
+	free_stack(&stack_a);
+	free_stack(&stack_b);
 }
 
 int	has_duplicates(int **stack, int len)
@@ -368,13 +370,11 @@ int	has_duplicates(int **stack, int len)
 
 int	main(int ac, char **av)
 {
-	//int	i;
 	int	length;
 	int	*stack;
 
 	length = ac - 1;
 	stack = NULL;
-	//i = 0;
 	if (ac < 2)
 	{
 		ft_printf("Error\n");
@@ -384,7 +384,7 @@ int	main(int ac, char **av)
 		length = fill_single_argument(av, &stack);
 	else
 		fill_multiple_arguments(av, ac, &stack);
-	if (stack == NULL || has_duplicates(&stack, length))
+	if (stack == NULL|| has_duplicates(&stack, length))
 	{
 		ft_printf("Error\n");
 		free_stack(&stack);
