@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/11 12:18:39 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/11 13:52:59 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,16 +277,25 @@ void	merge_sort(int **stack_a, int **stack_b, int length)
 	while (len_a > 3)
 	{
 		ft_push_b(stack_a, stack_b, &len_a, &len_b);
+		// ft_printf("LENGTH OF A: %d\nLENGTH OF B: %d\n", len_a, len_b);
 	}
-	while (len_b >= 0)
+	while (len_b > 0)
 	{
 		if (len_b == 1)
+		{
 			ft_push_a(stack_a, stack_b, &len_b, &len_a);
+			// ft_printf("LENGTH OF A: %d\nLENGTH OF B: %d\n***************\n", len_a, len_b);
+			// show_stack(stack_a, stack_b, length);
+		}
 		else
 		{
 			if (stack_b[0] > stack_b[len_b])
 				ft_reverse_rotate(stack_b, 'b', len_b);
+			// show_stack(stack_a, stack_b, length);
+			// ft_printf("********************\n");
 			ft_push_a(stack_a, stack_b, &len_b, &len_a);
+			// ft_printf("LENGTH OF A: %d\nLENGTH OF B: %d\n***************\n", len_a, len_b);
+			// show_stack(stack_a, stack_b, length);
 		}
 	}
 /* 	ft_push_a(stack_a, stack_b, &len_b, &len_a);
