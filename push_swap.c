@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/11 21:00:34 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/11 22:29:16 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,13 +290,17 @@ void	merge_sort(int **stack_a, int **stack_b, int length)
 		}
 		else
 		{
-			if (stack_b[0] > stack_b[len_b])
+			if (stack_b[0] > stack_b[len_b - 1])
 				ft_reverse_rotate(stack_b, 'b', len_b);
 			ft_push_a(stack_a, stack_b, &len_b, &len_a);
 		}
+		printf("LEN_A: %d\nLEN_B: %d\n", len_a, len_b);
 		show_stack(stack_a, stack_b, length);
 	}
-	ft_sort_three(stack_a, 'a');
+	if (len_a == 3)
+		ft_sort_three(stack_a, 'a');
+	if (len_a == 2)
+		ft_sort_two(stack_a, 'a');
 }
 
 /* void	ft_sort(int **stack_a, int **stack_b, int length)
@@ -314,7 +318,7 @@ void	merge_sort(int **stack_a, int **stack_b, int length)
 	i = 0;
 } */
 
-int	*ft_push_swap(int *stack, int length)
+void	*ft_push_swap(int *stack, int length)
 {
 	int	*stack_a;
 	int	*stack_b;
@@ -341,7 +345,7 @@ int	*ft_push_swap(int *stack, int length)
 		exit(1);
 	}
 	merge_sort(&stack_a, &stack_b, length);
-	return (stack_a);
+	exit(1);
 }
 
 int	has_duplicates(int **stack, int len)
@@ -391,6 +395,8 @@ int	main(int ac, char **av)
 		free_stack(&stack);
 		return (0);
 	}
+	ft_push_swap(stack, length);
+	show_stack(&stack, NULL, length);
 	free_stack(&stack);
 	return (0);
 }
