@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/10 23:11:30 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/11 10:57:04 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,16 +259,34 @@ void	show_stack(int **stack_a, int **stack_b, int length)
 		ft_printf("Stack_b[%d]: %d\n", i, (*stack_b)[i]);
 }
 
-/* void	merge_sort(int **stack_a, int **stack_b, int length)
+void	merge_sort(int **stack_a, int **stack_b, int length)
 {
-	int	i;
+	int			i;
+	static int	len_a;
+	static int	len_b;
 	
+	len_a = length;
+	len_b = 0;
 	i = 0;
-	while (i < length)
+	while (len_a > 3)
 	{
-		
+		ft_push_b(stack_a, stack_b, len_a, length);
+		len_a --;
+		len_b ++;
 	}
-} */
+	ft_sort_three(stack_a, 'a');
+	if (len_b >= 1 && stack_a[len_a] > stack_b[0])
+	{
+		ft_reverse_rotate(stack_a, 'a', len_a);
+		ft_push_b(stack_a, stack_b, len_a, length);
+		len_a --;
+		len_b ++;
+	}
+	if (!is_sorted(stack_a, len_a))
+		merge_sort(stack_a, stack_b, length);
+	else
+		exit(1);
+}
 
 /* void	ft_sort(int **stack_a, int **stack_b, int length)
 {
@@ -313,10 +331,7 @@ void	ft_push_swap(int *stack, int length)
 		free(stack_b);
 		exit(1);
 	}
-	if (length == 3)
-		ft_sort_three(&stack_a, 'a');
-	else if (length == 2)
-		ft_sort_two(&stack_a, 'a');
+	merge_sort(&stack_a, &stack_b, length);
 	show_stack(&stack_a, &stack_b, length);
 }
 
