@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/11 14:03:05 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/11 21:00:34 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,44 +278,25 @@ void	merge_sort(int **stack_a, int **stack_b, int length)
 	
 	len_a = length;
 	len_b = 0;
-	while (len_a > 3)
+	while (len_a > 2)
 	{
 		ft_push_b(stack_a, stack_b, &len_a, &len_b);
-		// ft_printf("LENGTH OF A: %d\nLENGTH OF B: %d\n", len_a, len_b);
 	}
 	while (len_b > 0)
 	{
 		if (len_b == 1)
 		{
 			ft_push_a(stack_a, stack_b, &len_b, &len_a);
-			// ft_printf("LENGTH OF A: %d\nLENGTH OF B: %d\n***************\n", len_a, len_b);
-			// show_stack(stack_a, stack_b, length);
 		}
 		else
 		{
 			if (stack_b[0] > stack_b[len_b])
 				ft_reverse_rotate(stack_b, 'b', len_b);
-			// show_stack(stack_a, stack_b, length);
-			// ft_printf("********************\n");
 			ft_push_a(stack_a, stack_b, &len_b, &len_a);
-			// ft_printf("LENGTH OF A: %d\nLENGTH OF B: %d\n***************\n", len_a, len_b);
-			// show_stack(stack_a, stack_b, length);
 		}
+		show_stack(stack_a, stack_b, length);
 	}
-/* 	ft_push_a(stack_a, stack_b, &len_b, &len_a);
-	ft_push_a(stack_a, stack_b, &len_b, &len_a); */
 	ft_sort_three(stack_a, 'a');
-/* 	if (len_b >= 1 && stack_a[len_a] > stack_b[0])
-	{
-		ft_reverse_rotate(stack_a, 'a', len_a);
-		ft_push_b(stack_a, stack_b, len_a, length);
-		len_a --;
-		len_b ++;
-	}
-	if (!is_sorted(stack_a, len_a))
-		merge_sort(stack_a, stack_b, length);
-	else
-		exit(1); */
 }
 
 /* void	ft_sort(int **stack_a, int **stack_b, int length)
@@ -355,13 +336,11 @@ int	*ft_push_swap(int *stack, int length)
 	}
 	if (is_sorted(&stack_a, length))
 	{
-		show_stack(&stack_a, &stack_b, length);
 		free(stack_a);
 		free(stack_b);
 		exit(1);
 	}
 	merge_sort(&stack_a, &stack_b, length);
-	show_stack(&stack_a, &stack_b, length);
 	return (stack_a);
 }
 
@@ -412,14 +391,6 @@ int	main(int ac, char **av)
 		free_stack(&stack);
 		return (0);
 	}
-	stack = ft_push_swap(stack, length);
-	if (is_sorted(&stack, length))
-		ft_printf("Stack is Sorted!!!\n");
-	else
-		ft_printf("STACK IS NOOOOOOOT SORTED!!!!!!!\n");
-	ft_printf("------------\n");
-	show_stack(&stack, NULL, length);
-	ft_printf("------------\n");
 	free_stack(&stack);
 	return (0);
 }
