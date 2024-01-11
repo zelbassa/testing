@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/11 13:52:59 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/11 14:03:05 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,22 +258,26 @@ void	ft_sort_two(int **stack, char id)
 
 void	show_stack(int **stack_a, int **stack_b, int length)
 {
-	for (int i = 0; i < length; i++)
-		ft_printf("Stack_a[%d]: %d\n", i, (*stack_a)[i]);
-	ft_printf("-------------\n");
-	for (int i = 0; i < length; i++)
-		ft_printf("Stack_b[%d]: %d\n", i, (*stack_b)[i]);
+	if (stack_a)
+	{
+		for (int i = 0; i < length; i++)
+			ft_printf("Stack_a[%d]: %d\n", i, (*stack_a)[i]);
+	}
+	if (stack_b)
+	{
+		ft_printf("-------------\n");
+		for (int i = 0; i < length; i++)
+			ft_printf("Stack_b[%d]: %d\n", i, (*stack_b)[i]);	
+	}
 }
 
 void	merge_sort(int **stack_a, int **stack_b, int length)
 {
-	// int			i;
-	static int	len_a;
-	static int	len_b;
+	int	len_a;
+	int	len_b;
 	
 	len_a = length;
 	len_b = 0;
-	// i = 0;
 	while (len_a > 3)
 	{
 		ft_push_b(stack_a, stack_b, &len_a, &len_b);
@@ -329,7 +333,7 @@ void	merge_sort(int **stack_a, int **stack_b, int length)
 	i = 0;
 } */
 
-void	ft_push_swap(int *stack, int length)
+int	*ft_push_swap(int *stack, int length)
 {
 	int	*stack_a;
 	int	*stack_b;
@@ -351,7 +355,6 @@ void	ft_push_swap(int *stack, int length)
 	}
 	if (is_sorted(&stack_a, length))
 	{
-		ft_printf("Stack is sorted!!\n");
 		show_stack(&stack_a, &stack_b, length);
 		free(stack_a);
 		free(stack_b);
@@ -359,6 +362,7 @@ void	ft_push_swap(int *stack, int length)
 	}
 	merge_sort(&stack_a, &stack_b, length);
 	show_stack(&stack_a, &stack_b, length);
+	return (stack_a);
 }
 
 int	has_duplicates(int **stack, int len)
@@ -408,7 +412,14 @@ int	main(int ac, char **av)
 		free_stack(&stack);
 		return (0);
 	}
-	ft_push_swap(stack, length);
+	stack = ft_push_swap(stack, length);
+	if (is_sorted(&stack, length))
+		ft_printf("Stack is Sorted!!!\n");
+	else
+		ft_printf("STACK IS NOOOOOOOT SORTED!!!!!!!\n");
+	ft_printf("------------\n");
+	show_stack(&stack, NULL, length);
+	ft_printf("------------\n");
 	free_stack(&stack);
 	return (0);
 }
