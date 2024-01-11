@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/11 10:57:04 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/11 12:12:49 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,56 +30,62 @@ int	is_int(const char *str)
 	return (1);
 }
 
-void	ft_push_b(int **src, int **dest, int len_src, int length)
+void	ft_push_b(int **src, int **dest, int *len_src, int *len_dest)
 {
 	int	i;
-	int	len_dest;
+	int	j;
 	int	placeholder;
 
 	i = 0;
+	j = 0;
 	if (!(*src))
 		return ;
 	placeholder = (*src)[0];
-	while (i < len_src - 1)
+	while (i < (*len_src) - 1)
 	{
 		(*src)[i] = (*src)[i + 1];
 		i++;
 	}
-	len_dest = length - len_src;
+	j = *len_dest;
 	i = 0;
-	while (len_dest > 0)
+	while (j > 0)
 	{
-		(*dest)[len_dest] = (*dest)[len_dest - 1];
-		len_dest--;
+		(*dest)[j] = (*dest)[j - 1];
+		j--;
 	}
-	(*src)[len_src - 1] = 0;
+	(*src)[*len_src - 1] = 0;
+	(*len_src)--;
+	(*len_dest)++;
 	(*dest)[0] = placeholder;
 	ft_printf("pb\n");
 }
 
-void	ft_push_a(int **dest, int **src, int len_src, int length)
+void	ft_push_a(int **dest, int **src, int *len_src, int *len_dest)
 {
 	int	i;
-	int	len_dest;
+	int	j;
 	int	placeholder;
 
+	j = 0;
 	i = 0;
 	if (!(*src))
 		return ;
 	placeholder = (*src)[0];
-	while (i < len_src - 1)
+	while (i < (*len_src) - 1)
 	{
 		(*src)[i] = (*src)[i + 1];
 		i++;
 	}
-	len_dest = length - len_src;
 	i = 0;
-	while (len_dest > 0)
+	j = *len_dest;
+	while (j > 0)
 	{
-		(*dest)[len_dest] = (*dest)[len_dest - 1];
-		len_dest--;
+		(*dest)[j] = (*dest)[j - 1];
+		j--;
 	}
-	(*src)[len_src - 1] = 0;
+	(*src)[*len_src - 1] = 0;
+	(*len_src)--;
+	(*len_dest)++;
 	(*dest)[0] = placeholder;
 	ft_printf("pa\n");
 }
@@ -270,12 +276,23 @@ void	merge_sort(int **stack_a, int **stack_b, int length)
 	i = 0;
 	while (len_a > 3)
 	{
-		ft_push_b(stack_a, stack_b, len_a, length);
-		len_a --;
-		len_b ++;
+		ft_push_b(stack_a, stack_b, &len_a, &len_b);
 	}
+	while (len_b >= 0)
+	{
+		if (len_b == 1)
+			ft_push_a(stack_a, stack_b, &len_b, &len_a);
+		else
+		{
+			if (stack_b[0] > stack_b[len_b])
+				ft_reverse_rotate(stack_b, 'b', len_b);
+			ft_push_a(stack_a, stack_b, &len_b, &len_a);
+		}
+	}
+/* 	ft_push_a(stack_a, stack_b, &len_b, &len_a);
+	ft_push_a(stack_a, stack_b, &len_b, &len_a); */
 	ft_sort_three(stack_a, 'a');
-	if (len_b >= 1 && stack_a[len_a] > stack_b[0])
+/* 	if (len_b >= 1 && stack_a[len_a] > stack_b[0])
 	{
 		ft_reverse_rotate(stack_a, 'a', len_a);
 		ft_push_b(stack_a, stack_b, len_a, length);
@@ -285,7 +302,7 @@ void	merge_sort(int **stack_a, int **stack_b, int length)
 	if (!is_sorted(stack_a, len_a))
 		merge_sort(stack_a, stack_b, length);
 	else
-		exit(1);
+		exit(1); */
 }
 
 /* void	ft_sort(int **stack_a, int **stack_b, int length)
