@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/11 22:29:16 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/12 23:23:32 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,28 +232,11 @@ int	is_sorted(int **stack, int len)
 	i = 0;
 	while (i < len - 1)
 	{
-		if ((*stack)[i] < (*stack)[i + 1])
-			i++;
-		else
+		if ((*stack)[i] > (*stack)[i + 1])
 			return (0);
+		i++;
 	}
 	return (1);
-}
-
-void	ft_sort_three(int **stack, char id)
-{
-	if (((*stack)[0] > (*stack)[1]) && ((*stack)[0] > (*stack)[2]))
-		ft_rotate(stack, id, 3);
-	if (((*stack)[1] > (*stack)[0]) && ((*stack)[1] > (*stack)[2]))
-		ft_reverse_rotate(stack, id, 3);
-	if ((*stack)[0] > (*stack)[1])
-		ft_swap(stack, id);
-}
-
-void	ft_sort_two(int **stack, char id)
-{
-	if ((*stack)[0] > (*stack)[1])
-		ft_swap(stack, id);
 }
 
 void	show_stack(int **stack_a, int **stack_b, int length)
@@ -267,41 +250,106 @@ void	show_stack(int **stack_a, int **stack_b, int length)
 	{
 		ft_printf("-------------\n");
 		for (int i = 0; i < length; i++)
-			ft_printf("Stack_b[%d]: %d\n", i, (*stack_b)[i]);	
+			ft_printf("Stack_b[%d]: %d\n", i, (*stack_b)[i]);
 	}
 }
 
-void	merge_sort(int **stack_a, int **stack_b, int length)
+/* void	sort_three(int **stack)
+{
+	if ((*stack)[0])
+} */
+
+void	sort_b(int *sorted_stack, int **stack_b, int len_b, int length)
+{
+	if ((*stack_b[0] > sorted_stack[length/3]))
+		ft_rotate(stack_b, 'b', len_b);
+}
+
+void	divide_elements(int **stack_a, int **stack_b, int length)
 {
 	int	len_a;
 	int	len_b;
-	
+	int	i;
+	int	*sorted_stack;
+
 	len_a = length;
 	len_b = 0;
-	while (len_a > 2)
+	i = 0;
+	sorted_stack = malloc(sizeof(int) * length);
+	sorted_stack = selection_sort(*stack_a, length);
+	show_stack(&sorted_stack, NULL, length);
+/* 	while (len_a > sorted_stack[length/3])
 	{
-		ft_push_b(stack_a, stack_b, &len_a, &len_b);
+		if ((*stack_a)[i] > length/3)
+			ft_push_b(stack_a, stack_b, &len_a, &len_b);
+		else
+			ft_rotate(stack_a, 'a', len_a);
 	}
-	while (len_b > 0)
+	printf("END OF PHASE 1\n----------------\n");
+	show_stack(NULL, stack_b, len_b); */
+	while (len_a > (length/3) * 2)
 	{
-		if (len_b == 1)
+		if ((*stack_a)[i] < sorted_stack[length/3])
 		{
-			ft_push_a(stack_a, stack_b, &len_b, &len_a);
+			ft_push_b(stack_a, stack_b, &len_a, &len_b);
+			sort_b(sorted_stack, stack_b, len_b, length);
 		}
 		else
-		{
-			if (stack_b[0] > stack_b[len_b - 1])
-				ft_reverse_rotate(stack_b, 'b', len_b);
-			ft_push_a(stack_a, stack_b, &len_b, &len_a);
-		}
-		printf("LEN_A: %d\nLEN_B: %d\n", len_a, len_b);
-		show_stack(stack_a, stack_b, length);
+			ft_rotate(stack_a, 'a', len_a);
 	}
-	if (len_a == 3)
-		ft_sort_three(stack_a, 'a');
-	if (len_a == 2)
-		ft_sort_two(stack_a, 'a');
+	printf("END OF PHASE 1\n----------------\n");
+	show_stack(NULL, stack_b, len_b);
+	while (len_a > 3)
+	{
+		if ((*stack_a)[i] > sorted_stack[length/3])
+			ft_push_b(stack_a, stack_b, &len_a, &len_b);
+		else
+			ft_rotate(stack_a, 'a', len_a);
+	}
+	printf("END OF PHASE 1\n----------------\n");
+	show_stack(NULL, stack_b, len_b);
 }
+
+/* void	divide_elements(int **stack_a, int **stack_b, int length)
+{
+	int	len_a;
+	int	len_b;
+
+	len_a = length;
+	len_b = 0;
+	if (!is_sorted(stack_a, len_a))
+	{
+			while (len_a != 0)
+			{
+				ft_push_b(stack_a, stack_b, &len_a, &len_b);
+			}
+			while (len_b > 0)
+			{
+				if (len_b == 1)
+				{
+					ft_push_a(stack_a, stack_b, &len_b, &len_a);
+					show_stack(stack_a, stack_b, length);
+				}
+				else
+				{
+					if ((*stack_b)[0] > (*stack_b)[len_b - 1])
+					{
+						ft_reverse_rotate(stack_b, 'b', len_b);
+						ft_push_a(stack_a, stack_b, &len_b, &len_a);
+					}
+					else
+					{
+						ft_push_a(stack_a, stack_b, &len_b, &len_a);
+						ft_reverse_rotate(stack_b, 'b', len_b);
+					}
+					ft_push_a(stack_a, stack_b, &len_b, &len_a);
+				}
+			}
+	}
+	merge_sort(stack_a, stack_b, &len_a, &len_b);
+	printf("--------------------\n");
+	show_stack(stack_a, stack_b, length);
+} */
 
 /* void	ft_sort(int **stack_a, int **stack_b, int length)
 {
@@ -318,7 +366,7 @@ void	merge_sort(int **stack_a, int **stack_b, int length)
 	i = 0;
 } */
 
-void	*ft_push_swap(int *stack, int length)
+void	ft_push_swap(int *stack, int length)
 {
 	int	*stack_a;
 	int	*stack_b;
@@ -344,8 +392,8 @@ void	*ft_push_swap(int *stack, int length)
 		free(stack_b);
 		exit(1);
 	}
-	merge_sort(&stack_a, &stack_b, length);
-	exit(1);
+	else
+		divide_elements(&stack_a, &stack_b, length);
 }
 
 int	has_duplicates(int **stack, int len)
@@ -373,13 +421,11 @@ int	has_duplicates(int **stack, int len)
 
 int	main(int ac, char **av)
 {
-	//int	i;
 	int	length;
 	int	*stack;
 
 	length = ac - 1;
 	stack = NULL;
-	//i = 0;
 	if (ac < 2)
 	{
 		ft_printf("Error\n");
@@ -396,7 +442,7 @@ int	main(int ac, char **av)
 		return (0);
 	}
 	ft_push_swap(stack, length);
-	show_stack(&stack, NULL, length);
+	// show_stack(stack, NULL, length);
 	free_stack(&stack);
 	return (0);
 }
