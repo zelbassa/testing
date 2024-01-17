@@ -6,13 +6,73 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/12 23:23:32 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/15 19:07:44 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int	is_int(const char *str)
+/* void	treat_output(char **cmd)
+{
+	if (cmd[0] && cmd[1] && strncmp(cmd[0], cmd[1], 1) == 0 
+	&& cmd[0][0] != 'p')
+	{
+		if ((strcmp(cmd[0], "sa") == 0) && (ft_strcmp(cmd[1], "sb") == 0))
+			ft_printf("ss\n");
+		else if ((ft_strcmp(cmd[0], "rra") == 0) && (ft_strcmp(cmd[1], "rrb") == 0))
+			ft_printf("rrr\n");
+		else if ((ft_strcmp(cmd[0], "ra") == 0) && (ft_strcmp(cmd[1], "rb") == 0))
+			ft_printf("rr\n");
+
+		free(cmd[0]);
+		free(cmd[1]);
+		cmd[0] = NULL;
+		cmd[1] = NULL;
+	}
+	else
+	{
+		if (cmd[0])
+		{
+			ft_printf("%s\n", cmd[0]);
+			free(cmd[0]);
+			cmd[0] = cmd[1];
+			cmd[1] = NULL;
+		}
+	}
+}
+
+void	process_remaining_commands(char **cmd)
+{
+	if (cmd[0])
+	{
+		ft_printf("%s\n", cmd[0]);
+		free(cmd[0]);
+		cmd[0] = NULL;
+	}
+}
+
+void	command_stack(char *new_cmd)
+{
+	static char	*cmd[2] = {NULL, NULL};
+
+	if (new_cmd == NULL)
+	{
+		process_remaining_commands(cmd);
+		return;
+	}
+
+	if (cmd[0] == NULL)
+		cmd[0] = ft_strdup(new_cmd);
+	else if (cmd[1] == NULL)
+		cmd[1] = ft_strdup(new_cmd);
+	else
+	{
+		treat_output(cmd);
+		cmd[1] = ft_strdup(new_cmd);
+	}
+} */
+
+int		is_int(const char *str)
 {
 	int	i;
 
@@ -38,8 +98,6 @@ void	ft_push_b(int **src, int **dest, int *len_src, int *len_dest)
 
 	i = 0;
 	j = 0;
-	if (!(*src))
-		return ;
 	placeholder = (*src)[0];
 	while (i < (*len_src) - 1)
 	{
@@ -58,6 +116,7 @@ void	ft_push_b(int **src, int **dest, int *len_src, int *len_dest)
 	(*len_dest)++;
 	(*dest)[0] = placeholder;
 	ft_printf("pb\n");
+	// command_stack("pb");
 }
 
 void	ft_push_a(int **dest, int **src, int *len_src, int *len_dest)
@@ -68,8 +127,6 @@ void	ft_push_a(int **dest, int **src, int *len_src, int *len_dest)
 
 	j = 0;
 	i = 0;
-	if (!(*src))
-		return ;
 	placeholder = (*src)[0];
 	while (i < (*len_src) - 1)
 	{
@@ -88,6 +145,7 @@ void	ft_push_a(int **dest, int **src, int *len_src, int *len_dest)
 	(*len_dest)++;
 	(*dest)[0] = placeholder;
 	ft_printf("pa\n");
+	// command_stack("pa");
 }
 
 void	ft_reverse_rotate(int **stack, char id, int length)
@@ -104,9 +162,15 @@ void	ft_reverse_rotate(int **stack, char id, int length)
 	}
 	(*stack)[0] = i;
 	if (id == 'a')
+	{
 		ft_printf("rra\n");
+		// command_stack("rra");
+	}
 	else if (id == 'b')
+	{
 		ft_printf("rrb\n");
+		// command_stack("rrb");
+	}
 }
 
 void	ft_rotate(int **stack, char id, int length)
@@ -123,9 +187,15 @@ void	ft_rotate(int **stack, char id, int length)
 	}
 	(*stack)[length - 1] = i;
 	if (id == 'a')
+	{
 		ft_printf("ra\n");
+		// command_stack("ra");
+	}
 	else if (id == 'b')
+	{
 		ft_printf("rb\n");
+		// command_stack("rb");
+	}
 }
 
 void	ft_swap(int **stack, char id)
@@ -136,12 +206,18 @@ void	ft_swap(int **stack, char id)
 	(*stack)[1] = (*stack)[0];
 	(*stack)[0] = i;
 	if (id == 'a')
+	{
 		ft_printf("sa\n");
+		// command_stack("sa");
+	}
 	if (id == 'b')
+	{
 		ft_printf("sb\n");
+		// command_stack("sb");	
+	}
 }
 
-int	within_range(const char *str)
+int		within_range(const char *str)
 {
 	const char	*int_max;
 	const char	*int_min;
@@ -168,7 +244,7 @@ void	free_stack(int **stack)
 	*stack = NULL;
 }
 
-int	fill_single_argument(char **av, int **stack)
+int		fill_single_argument(char **av, int **stack)
 {
 	int		i;
 	char	**tokens;
@@ -225,7 +301,7 @@ void	fill_multiple_arguments(char **av, int ac, int **stack)
 	}
 }
 
-int	is_sorted(int **stack, int len)
+int		is_sorted(int **stack, int len)
 {
 	int	i;
 
@@ -254,16 +330,169 @@ void	show_stack(int **stack_a, int **stack_b, int length)
 	}
 }
 
-/* void	sort_three(int **stack)
+int		find_min(int **stack, int len)
 {
-	if ((*stack)[0])
-} */
+	int	i;
+	int	k;
+	int	min_value;
 
-void	sort_b(int *sorted_stack, int **stack_b, int len_b, int length)
+	i = 0;
+	k = 1;
+	min_value = 0;
+	while (i < len - 1 && k + i < len)
+	{
+		if ((*stack)[i] < (*stack)[i + k])
+		{
+			k ++;
+		}
+		else
+		{
+			i ++;
+		}
+		min_value = i;
+	}
+	return (min_value);
+}
+
+void	ft_sort_three(int **stack, char id)
 {
-	if ((*stack_b[0] > sorted_stack[length/3]))
+	if (((*stack)[0] > (*stack)[1]) && ((*stack)[0] > (*stack)[2]))
+		ft_rotate(stack, id, 3);
+	if (((*stack)[1] > (*stack)[0]) && ((*stack)[1] > (*stack)[2]))
+		ft_reverse_rotate(stack, id, 3);
+	if ((*stack)[0] > (*stack)[1])
+		ft_swap(stack, id);
+}
+
+void	ft_sort_four(int **stack_a, int **stack_b, int	*len_a, int *len_b)
+{
+	int	min_index;
+
+	min_index = find_min(stack_a, 4);
+	if (min_index < 2)
+	{
+		if (min_index == 1)
+			ft_swap(stack_a, 'a');
+		if (!is_sorted(stack_a, 4))
+			ft_push_b(stack_a, stack_b, len_a, len_b);
+		else
+			return ;
+	}
+	else
+	{
+		if (min_index == 2)
+			ft_reverse_rotate(stack_a, 'a', 4);
+		ft_reverse_rotate(stack_a, 'a', 4);
+		if (!is_sorted(stack_a, 4))
+			ft_push_b(stack_a, stack_b, len_a, len_b);
+		else
+			return ;
+	}
+	ft_sort_three(stack_a, 'a');
+	ft_push_a(stack_a, stack_b, len_b, len_a);
+}
+
+void	sort_b(int **stack_b, int len_b, int limit)
+{
+	if (len_b > 1 && (*stack_b[0]) > limit)
 		ft_rotate(stack_b, 'b', len_b);
 }
+
+void	special_sort(int **stack_a, int **stack_b, int *len_a, int *len_b)
+{
+	(void)stack_b;
+	(void)len_b;
+	(void)len_a;
+	(void)stack_a;
+}
+
+int	mid_point_in_stack(int **stack, int len, int mid_point)
+{
+	int i;
+
+	i = 0;
+	while (i < len)
+	{
+		if (mid_point == (*stack)[i])
+			return (1);
+	}
+	return (0);
+}
+
+/*  void	mid_point_a(int **stack_a, int **stack_b, int *len_a, int *len_b)
+{
+	int	*sorted_stack;
+	int	total_len;
+	int	i;
+	int	*placeholder;
+	static int	*chunk;
+	
+	chunk = 0;
+	total_len = *len_a;
+	i = 0;
+	sorted_stack = malloc(sizeof(int) * (*len_a));
+	placeholder = malloc(sizeof(int) * (*len_a));
+	while(i < (*len_a))
+	{
+		placeholder[i] = (*stack_a)[i];
+		i ++;
+	}
+	sorted_stack = selection_sort(placeholder, *len_a);
+	int	mid_point = sorted_stack[(*len_a)/2];
+	// printf("mid_point: %d\n", mid_point);
+	i = 0;
+	while (i < (total_len)/2)
+	{
+		if ((*stack_a)[0] < mid_point)
+		{
+			ft_push_b(stack_a, stack_b, len_a, len_b);
+			sort_b(stack_b, *len_b, mid_point);
+			i ++;
+		}
+		else if ((*stack_a)[*len_a - 1] < mid_point)
+		{
+			ft_reverse_rotate(stack_a, 'a', *len_a);
+			ft_push_b(stack_a, stack_b, len_a, len_b);
+			i ++;
+		}
+		else
+			ft_rotate(stack_a, 'a', *len_a);
+	}
+	// chunk[]
+	if (*len_a > 2)
+		mid_point_a(stack_a, stack_b, len_a, len_b);
+	if ((*stack_a)[0] > (*stack_a)[1])
+		ft_swap(stack_a, 'a');
+	printf("len_a: %d\n", *len_a);
+	printf("len_b: %d\n", *len_b);
+}*/
+
+/* void	mid_point(int **stack, int length)
+{
+	int	*sorted_stack;
+	int	i;
+	int	*placeholder;
+
+	i = 0;
+	sorted_stack = malloc(sizeof(int) * length);
+	placeholder = malloc(sizeof(int) * length);
+	while(i < length)
+	{
+		placeholder[i] = stack[i];
+		i ++;
+	}
+	sorted_stack = selection_sort(placeholder, length);
+	mid_point_algo(stack, length, sorted_stack);
+} */
+
+/* void	mid_point_algo(int **stack, int length, int sorted_stack)
+{
+	int	i;
+
+	i = 0;
+	
+} */
+
 
 void	divide_elements(int **stack_a, int **stack_b, int length)
 {
@@ -271,100 +500,91 @@ void	divide_elements(int **stack_a, int **stack_b, int length)
 	int	len_b;
 	int	i;
 	int	*sorted_stack;
+	int	*placeholder;
 
 	len_a = length;
 	len_b = 0;
 	i = 0;
 	sorted_stack = malloc(sizeof(int) * length);
-	sorted_stack = selection_sort(*stack_a, length);
-	show_stack(&sorted_stack, NULL, length);
-/* 	while (len_a > sorted_stack[length/3])
+	placeholder = malloc(sizeof(int) * length);
+	while(i < length)
 	{
-		if ((*stack_a)[i] > length/3)
-			ft_push_b(stack_a, stack_b, &len_a, &len_b);
-		else
-			ft_rotate(stack_a, 'a', len_a);
+		placeholder[i] = (*stack_a)[i];
+		i ++;
 	}
-	printf("END OF PHASE 1\n----------------\n");
-	show_stack(NULL, stack_b, len_b); */
-	while (len_a > (length/3) * 2)
+	i = 0;
+	sorted_stack = selection_sort(placeholder, length);
+	if (len_a == 4)
 	{
-		if ((*stack_a)[i] < sorted_stack[length/3])
+		ft_sort_four(stack_a, stack_b, &len_a, &len_b);
+		exit(1);
+	}
+	if (len_a == 3)
+	{
+		ft_sort_three(stack_a, 'a');
+		exit(1);
+	}
+	else if (len_a == 2)
+	{
+		if ((*stack_a)[0] > (*stack_a)[1])
+			ft_swap(stack_a, 'a');
+		exit(1);
+	}
+	int	k = length/3; // 10
+	int	l = k * 2; // 20
+	if (length <= 15)
+	{
+		while (len_a > k + 1) // while (len_a > 10)
 		{
-			ft_push_b(stack_a, stack_b, &len_a, &len_b);
-			sort_b(sorted_stack, stack_b, len_b, length);
-		}
-		else
-			ft_rotate(stack_a, 'a', len_a);
-	}
-	printf("END OF PHASE 1\n----------------\n");
-	show_stack(NULL, stack_b, len_b);
-	while (len_a > 3)
-	{
-		if ((*stack_a)[i] > sorted_stack[length/3])
-			ft_push_b(stack_a, stack_b, &len_a, &len_b);
-		else
-			ft_rotate(stack_a, 'a', len_a);
-	}
-	printf("END OF PHASE 1\n----------------\n");
-	show_stack(NULL, stack_b, len_b);
-}
-
-/* void	divide_elements(int **stack_a, int **stack_b, int length)
-{
-	int	len_a;
-	int	len_b;
-
-	len_a = length;
-	len_b = 0;
-	if (!is_sorted(stack_a, len_a))
-	{
-			while (len_a != 0)
+			// printf("the length of len_a: %d\nk: %d", len_a, k);
+			if ((*stack_a)[0] <= sorted_stack[l]) // if the first element of stack_a is lower than the two third's elemnt of the sorted one
 			{
 				ft_push_b(stack_a, stack_b, &len_a, &len_b);
+				sort_b(stack_b, len_b, sorted_stack[k]);
 			}
-			while (len_b > 0)
+			else
 			{
-				if (len_b == 1)
-				{
-					ft_push_a(stack_a, stack_b, &len_b, &len_a);
-					show_stack(stack_a, stack_b, length);
-				}
-				else
-				{
-					if ((*stack_b)[0] > (*stack_b)[len_b - 1])
-					{
-						ft_reverse_rotate(stack_b, 'b', len_b);
-						ft_push_a(stack_a, stack_b, &len_b, &len_a);
-					}
-					else
-					{
-						ft_push_a(stack_a, stack_b, &len_b, &len_a);
-						ft_reverse_rotate(stack_b, 'b', len_b);
-					}
-					ft_push_a(stack_a, stack_b, &len_b, &len_a);
-				}
+				ft_rotate(stack_a, 'a', len_a);
 			}
+		}
+		while (len_a > 3)
+		{
+			if ((*stack_a)[0] < sorted_stack[length - 3])
+				ft_push_b(stack_a, stack_b, &len_a, &len_b);
+			else
+				ft_rotate(stack_a, 'a', len_a);
+			if (len_a%2==1)
+				ft_rotate(stack_b, 'b', len_b);
+		}
+		if (len_a == 3)
+		{
+			ft_sort_three(stack_a, 'a');
+		}
+		while (len_a < length)
+		{
+			if ((*stack_b[0]) < (*stack_b)[len_b - 1])
+			{
+				ft_reverse_rotate(stack_b, 'b', len_b);
+			}
+			ft_push_a(stack_a, stack_b, &len_b, &len_a);
+			while ((*stack_a)[0] > (*stack_a)[1])
+			{
+				ft_swap(stack_a, 'a');
+				ft_rotate(stack_a, 'a', len_a);
+				i ++;
+			}
+			while (i > 0)
+			{
+				ft_reverse_rotate(stack_a, 'a', len_a);
+				i --;
+			}
+		}
 	}
-	merge_sort(stack_a, stack_b, &len_a, &len_b);
-	printf("--------------------\n");
-	show_stack(stack_a, stack_b, length);
-} */
+	else
+		special_sort(stack_a, stack_b, &len_a, &len_b);
+	// show_stack(stack_a, stack_b, length);
+}
 
-/* void	ft_sort(int **stack_a, int **stack_b, int length)
-{
-	int	mid_point;
-	int	len_a;
-	int	len_b;
-	int	i;
-
-	len_a = length;
-	len_b = 0;
-	if (is_sorted(stack_a, len_a) && len_a == length)
-		exit(1);
-	mid_point = mid_number(stack_a, length);
-	i = 0;
-} */
 
 void	ft_push_swap(int *stack, int length)
 {
@@ -392,8 +612,9 @@ void	ft_push_swap(int *stack, int length)
 		free(stack_b);
 		exit(1);
 	}
-	else
-		divide_elements(&stack_a, &stack_b, length);
+	// show_stack(&stack_a, &stack_b, length);
+	// mid_point_a(&stack_a, &stack_b, &len_a, &len_b);
+	divide_elements(&stack_a, &stack_b, length);
 }
 
 int	has_duplicates(int **stack, int len)
@@ -442,7 +663,7 @@ int	main(int ac, char **av)
 		return (0);
 	}
 	ft_push_swap(stack, length);
-	// show_stack(stack, NULL, length);
+	// show_stack(&stack, NULL, length);
 	free_stack(&stack);
 	return (0);
 }

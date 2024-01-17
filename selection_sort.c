@@ -9,7 +9,7 @@ void swap(int* xp, int* yp)
 	*yp = temp; 
 } 
 
-int	*selection_sort(int arr[], int n)
+int *selection_sort(int arr[], int n)
 { 
 	int	i;
 	int	j;

@@ -6,14 +6,13 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 17:21:48 by zelbassa          #+#    #+#             */
-/*   Updated: 2023/11/15 23:34:59 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/14 10:44:24 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcat(char *dst,
-		const char *src, size_t dstsize)
+size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 {
 	size_t	i;
 	size_t	j;
