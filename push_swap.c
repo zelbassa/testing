@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/15 19:07:44 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/18 16:22:08 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -342,12 +342,11 @@ int		find_min(int **stack, int len)
 	while (i < len - 1 && k + i < len)
 	{
 		if ((*stack)[i] < (*stack)[i + k])
-		{
 			k ++;
-		}
 		else
 		{
-			i ++;
+			i = k;
+			k ++;
 		}
 		min_value = i;
 	}
@@ -369,6 +368,7 @@ void	ft_sort_four(int **stack_a, int **stack_b, int	*len_a, int *len_b)
 	int	min_index;
 
 	min_index = find_min(stack_a, 4);
+	printf("The minimum index: %d\n", min_index);
 	if (min_index < 2)
 	{
 		if (min_index == 1)
@@ -392,18 +392,72 @@ void	ft_sort_four(int **stack_a, int **stack_b, int	*len_a, int *len_b)
 	ft_push_a(stack_a, stack_b, len_b, len_a);
 }
 
+void	ft_sort_five(int **stack_a, int **stack_b, int *len_a, int *len_b)
+{
+	int	min_index;
+
+	min_index = find_min(stack_a, 5);
+	if (min_index < 2)
+	{
+		if (min_index == 1)
+			ft_swap(stack_a, 'a');
+		if (!is_sorted(stack_a, 5))
+			ft_push_b(stack_a, stack_b, len_a, len_b);
+		else
+			return ;
+	}
+	else
+	{
+		if (min_index == 2)
+			ft_reverse_rotate(stack_a, 'a', 5);
+		ft_reverse_rotate(stack_a, 'a', 5);
+		if (!is_sorted(stack_a, 5))
+			ft_push_b(stack_a, stack_b, len_a, len_b);
+		else
+			return ;
+	}
+	ft_sort_four(stack_a, stack_b, len_a, len_b);
+	ft_push_a(stack_a, stack_b, len_b, len_a);
+}
+
 void	sort_b(int **stack_b, int len_b, int limit)
 {
 	if (len_b > 1 && (*stack_b[0]) > limit)
 		ft_rotate(stack_b, 'b', len_b);
 }
 
+int		ft_sqrt(int nb)
+{
+	int	i;
+
+	i = 1;
+	while (i * i <= nb)
+	{
+		if (i * i == nb)
+			return (i);
+		i ++;
+	}
+	return (i - 1);
+}
+
 void	special_sort(int **stack_a, int **stack_b, int *len_a, int *len_b)
 {
+	// int	hold_first;
+	// int	hold_second;
+	int chunk;
+	// int	i;
+	// int	k;
 	(void)stack_b;
+	(void)stack_a;
 	(void)len_b;
 	(void)len_a;
-	(void)stack_a;
+
+	// i = 0;
+	// k = 0;
+	chunk = ft_sqrt(*len_a);
+	printf("the chunk: %d\n", chunk);
+	printf("The length of A: %d\n", *len_a);
+	// show_stack(stack_a, NULL, *len_a);
 }
 
 int	mid_point_in_stack(int **stack, int len, int mid_point)
@@ -514,25 +568,30 @@ void	divide_elements(int **stack_a, int **stack_b, int length)
 	}
 	i = 0;
 	sorted_stack = selection_sort(placeholder, length);
-	if (len_a == 4)
+	int	k = length/3; // 10
+	int	l = k * 2; // 20
+	if (len_a == 5)
+	{
+		ft_sort_five(stack_a, stack_b, &len_a, &len_b);
+		// exit(1);
+	}
+	else if (len_a == 4)
 	{
 		ft_sort_four(stack_a, stack_b, &len_a, &len_b);
-		exit(1);
+		// exit(1);
 	}
-	if (len_a == 3)
+	else if (len_a == 3)
 	{
 		ft_sort_three(stack_a, 'a');
-		exit(1);
+		// exit(1);
 	}
 	else if (len_a == 2)
 	{
 		if ((*stack_a)[0] > (*stack_a)[1])
 			ft_swap(stack_a, 'a');
-		exit(1);
+		// exit(1);
 	}
-	int	k = length/3; // 10
-	int	l = k * 2; // 20
-	if (length <= 15)
+	else if (length <= 15)
 	{
 		while (len_a > k + 1) // while (len_a > 10)
 		{
@@ -582,7 +641,8 @@ void	divide_elements(int **stack_a, int **stack_b, int length)
 	}
 	else
 		special_sort(stack_a, stack_b, &len_a, &len_b);
-	// show_stack(stack_a, stack_b, length);
+	show_stack(stack_a, stack_b, length);
+	exit(1);
 }
 
 
