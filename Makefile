@@ -4,7 +4,7 @@ PRINTF	= ft_printf/libftprintf.a
 CFLAGS	= -Wall -Wextra -Werror -I.
 FILES	= push_swap.c mid_point.c selection_sort.c
 OBJ		= $(FILES:.c=.o)
-CC		= gcc -O2 -fsanitize=address
+CC		= gcc
 
 all: $(NAME)
 
