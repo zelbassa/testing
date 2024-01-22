@@ -6,7 +6,7 @@
 /*   By: zelbassa <zelbassa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 21:21:54 by zelbassa          #+#    #+#             */
-/*   Updated: 2024/01/20 13:00:05 by zelbassa         ###   ########.fr       */
+/*   Updated: 2024/01/21 22:18:53 by zelbassa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -368,7 +368,6 @@ void	ft_sort_four(int **stack_a, int **stack_b, int	*len_a, int *len_b)
 	int	min_index;
 
 	min_index = find_min(stack_a, 4);
-	printf("The minimum index: %d\n", min_index);
 	if (min_index < 2)
 	{
 		if (min_index == 1)
@@ -422,7 +421,7 @@ void	ft_sort_five(int **stack_a, int **stack_b, int *len_a, int *len_b)
 
 void	sort_b(int **stack_b, int len_b)
 {
-	if (len_b > 1 && (*stack_b)[0] < (*stack_b)[1])
+	if (len_b > 1 && (*stack_b)[0] > (*stack_b)[1] && (*stack_b)[0] > (*stack_b)[len_b - 1])
 		ft_rotate(stack_b, 'b', len_b);
 }
 
@@ -613,19 +612,14 @@ void	sort_to_a(int **stack_a, int **stack_b, int *len_b, int *len_a)
 	}
 }
 
-void	three_part_sort(int **stack_a, int **stack_b, int *len_a, int *len_b)
+/* void	three_part_sort(int **stack_a, int **stack_b, int *len_a, int *len_b)
 {
     int	*sorted_stack;
     int	*placeholder;
     int	i;
 	int	chunks;
 
-	if (*len_a < 100)
-		chunks = 5;
-	else if (*len_a < 500)
-		chunks = 10;
-	else
-		chunks = 18;
+	chunks = ft_sqrt(*len_a);
 	i = 0;
 	int	length = *len_a;
 	placeholder = malloc(sizeof(int) * (*len_a));
@@ -636,7 +630,7 @@ void	three_part_sort(int **stack_a, int **stack_b, int *len_a, int *len_b)
 		i ++;
 	}
 	sorted_stack = selection_sort(placeholder, *len_a);
-	while (*len_a != 0)
+	while (*len_a > 0)
 	{
 		if ((*stack_a)[0] <= sorted_stack[chunks])
 		{
@@ -649,7 +643,90 @@ void	three_part_sort(int **stack_a, int **stack_b, int *len_a, int *len_b)
 			ft_rotate(stack_a, 'a', *len_a);
 		// printf("(*stack_a)[0]: %d\n is less than sorted_stack[chunks]: %d\n", (*stack_a)[0], sorted_stack[chunks]);
 	}
+	// show_stack(stack_a, stack_b, len);
 	sort_to_a(stack_a, stack_b, len_b, len_a);
+} */
+
+int	mid_point_index(int *stack_a, int mid_point)
+{
+	int	i;
+
+	i = 0;
+	while (stack_a[i] != mid_point)
+		i++;
+	return (i);
+}
+
+void	mid_sort_b(int **stack_b, int *len_b, int mid_point)
+{
+	if ((*stack_b)[0] > mid_point)
+		ft_rotate(stack_b, 'b', *len_b);
+}
+
+void	find_shortest_way(int **stack_a, int **stack_b, int *len_a, int *len_b)
+{
+	int	i;
+
+	i = 0;
+	while (i < *len_b)
+	{
+		if ((*stack_b)[0])
+	}
+}
+
+void	mid_point_sort(int **stack_a, int **stack_b, int *len_a, int *len_b)
+{
+	int	*sorted_stack;
+	int	*placeholder;
+
+	int	i = 0;
+	sorted_stack = malloc(sizeof(int) * *len_a);
+	placeholder = malloc(sizeof(int) * *len_a);
+	while(i < *len_a)
+	{
+		placeholder[i] = (*stack_a)[i];
+		i ++;
+	}
+	i = 0;
+	sorted_stack = selection_sort(placeholder, *len_a);
+	int	mid_point = sorted_stack[(*len_a/2) - 1];
+	if (mid_point_index(*stack_a, mid_point) >= *len_a/2)
+	{
+		while((*stack_a)[0] != mid_point)
+			ft_reverse_rotate(stack_a, 'a', *len_a);
+	}
+	else
+	{
+		while((*stack_a)[0] != mid_point)
+			ft_rotate(stack_a, 'a', *len_a);
+	}
+	ft_push_b(stack_a, stack_b, len_a, len_b);
+	while (*len_a > 5)
+	{
+		// printf("this is (*stack_a)[0]: %d\nand this is sorted_stack[*len_a - 6]: %d\n", (*stack_a)[0], sorted_stack[*len_a - 5]);
+		if ((*stack_a)[0] < sorted_stack[(*len_a + *len_b) - 5])
+		{
+			ft_push_b(stack_a, stack_b, len_a, len_b);
+			mid_sort_b(stack_b, len_b, mid_point);
+		}
+		else
+			ft_rotate(stack_a, 'a', *len_a);
+	}
+	ft_sort_five(stack_a, stack_b, len_a, len_b);
+	while (*len_b != 0)
+	{
+		if (*stack_b[0] < mid_point)
+			ft_push_a(stack_a, stack_b, len_b, len_a);
+		else
+			ft_rotate(stack_b, 'b', *len_b);
+		find_shortest_way(stack_a, stack_b, *len_a, *len_b);
+	}
+	show_stack(stack_a, stack_b, *len_a + *len_b);
+/* 	if (mid_point_index(*stack_a, *len_a, mid_point) > *len_a/2)
+	while(*len_a > 5)
+	{
+		
+	} */
 }
 
 void	divide_elements(int **stack_a, int **stack_b, int length)
@@ -744,7 +821,8 @@ void	divide_elements(int **stack_a, int **stack_b, int length)
 		}
 	}
 	else */
-	three_part_sort(stack_a, stack_b, &len_a, &len_b);
+	// three_part_sort(stack_a, stack_b, &len_a, &len_b);
+	mid_point_sort(stack_a, stack_b, &len_a, &len_b);
 	// show_stack(stack_a, stack_b, length);
 	exit(1);
 }

@@ -657,7 +657,7 @@
 	let fade_in_timeout_id = null;
 	function copyExecCommand() {
 		window.navigator.clipboard.writeText(
-			`./push_swap "${number_output.value}" | pbcopy`
+			`./push_swap "${number_output.value}" | c`
 		);
 		const modal = document.getElementById('modal-copied');
 		if (modal.classList.contains('fade-in-active')) {
